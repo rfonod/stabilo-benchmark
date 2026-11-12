@@ -1,0 +1,321 @@
+{
+  "version": "5.2.1",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "p01",
+      "points": [
+        [
+          791.6836640346825,
+          798.048485594153
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "point",
+      "flags": {}
+    },
+    {
+      "label": "p02",
+      "points": [
+        [
+          639.4449306202787,
+          1153.901058411319
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "point",
+      "flags": {}
+    },
+    {
+      "label": "p03",
+      "points": [
+        [
+          137.55849228287957,
+          1169.949415982582
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "point",
+      "flags": {}
+    },
+    {
+      "label": "p04",
+      "points": [
+        [
+          3040.8432452973784,
+          1142.091222304111
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "point",
+      "flags": {}
+    },
+    {
+      "label": "p05",
+      "points": [
+        [
+          3604.819616025011,
+          1121.4810249962013
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "point",
+      "flags": {}
+    },
+    {
+      "label": "p06",
+      "points": [
+        [
+          1774.8065381204926,
+          1160.9674648966432
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "point",
+      "flags": {}
+    },
+    {
+      "label": "p07",
+      "points": [
+        [
+          1771.3840464871698,
+          1770.54542980431
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "point",
+      "flags": {}
+    },
+    {
+      "label": "p08",
+      "points": [
+        [
+          3271.7562576425676,
+          998.420416797187
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "point",
+      "flags": {}
+    },
+    {
+      "label": "p09",
+      "points": [
+        [
+          1671.7909910018127,
+          1557.9150483900428
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "point",
+      "flags": {}
+    },
+    {
+      "label": "p10",
+      "points": [
+        [
+          2875.8769277354622,
+          1701.3213045317939
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "point",
+      "flags": {}
+    },
+    {
+      "label": "p11",
+      "points": [
+        [
+          1720.7982133653281,
+          413.22737129219627
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "point",
+      "flags": {}
+    },
+    {
+      "label": "p13",
+      "points": [
+        [
+          2329.3788510066147,
+          343.7754887138227
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "point",
+      "flags": {}
+    },
+    {
+      "label": "p14",
+      "points": [
+        [
+          1954.0002470652241,
+          2003.8989975264428
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "point",
+      "flags": {}
+    },
+    {
+      "label": "p15",
+      "points": [
+        [
+          198.8898374622954,
+          1479.4730506956512
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "point",
+      "flags": {}
+    }
+  ],
+  "imagePath": "../images/002316.jpg",
+  "imageData": null,
+  "imageHeight": 2160,
+  "imageWidth": 3840,
+  "stabilo_benchmark": {
+    "session": "first",
+    "prediction": "oracle",
+    "panel_zoom": 4.0,
+    "jitter_px": 6.0,
+    "proposal": {
+      "method": "local affine ECC from the platform motion",
+      "radius_px": 40,
+      "search_px": 24,
+      "min_correlation": 0.8,
+      "max_round_trip_px": 0.5,
+      "max_occupied": 0.4,
+      "object_margin_px": 8
+    },
+    "proposals": {
+      "p01": {
+        "point": [
+          791.6836640346825,
+          798.048485594153
+        ],
+        "correlation": 0.9907095865189895,
+        "round_trip_px": 0.03375399568169609,
+        "reason": ""
+      },
+      "p02": {
+        "point": [
+          639.4449306202787,
+          1153.901058411319
+        ],
+        "correlation": 0.9576233196162574,
+        "round_trip_px": 0.08632953161123699,
+        "reason": ""
+      },
+      "p03": {
+        "point": null,
+        "correlation": 0.9227625217345009,
+        "round_trip_px": 2.3157929982023857,
+        "reason": "round trip 2.32 px above 0.5 px"
+      },
+      "p04": {
+        "point": [
+          3040.8432452973784,
+          1142.091222304111
+        ],
+        "correlation": 0.9972222120148169,
+        "round_trip_px": 0.007524050309247699,
+        "reason": ""
+      },
+      "p05": {
+        "point": [
+          3604.819616025011,
+          1121.4810249962013
+        ],
+        "correlation": 0.9934814058676391,
+        "round_trip_px": 0.012660251746546308,
+        "reason": ""
+      },
+      "p06": {
+        "point": [
+          1774.8065381204926,
+          1160.9674648966432
+        ],
+        "correlation": 0.9912442910953299,
+        "round_trip_px": 0.012675162068210294,
+        "reason": ""
+      },
+      "p07": {
+        "point": null,
+        "correlation": 0.9222979426903174,
+        "round_trip_px": 1.7665154680955477,
+        "reason": "round trip 1.77 px above 0.5 px"
+      },
+      "p08": {
+        "point": [
+          3271.7562576425676,
+          998.420416797187
+        ],
+        "correlation": 0.8080812134610125,
+        "round_trip_px": 0.2192648336387978,
+        "reason": ""
+      },
+      "p09": {
+        "point": null,
+        "correlation": 0.7822326749789036,
+        "round_trip_px": 0.07371574790781099,
+        "reason": "correlation 0.78 below 0.8"
+      },
+      "p10": {
+        "point": [
+          2875.8769277354622,
+          1701.3213045317939
+        ],
+        "correlation": 0.9925454614956777,
+        "round_trip_px": 0.013832525208609328,
+        "reason": ""
+      },
+      "p11": {
+        "point": [
+          1720.7982133653281,
+          413.22737129219627
+        ],
+        "correlation": 0.9931686367219198,
+        "round_trip_px": 0.016456412607869043,
+        "reason": ""
+      },
+      "p12": {
+        "point": null,
+        "correlation": 0.7075285866655088,
+        "round_trip_px": null,
+        "reason": "fit back: objects cover the neighborhood"
+      },
+      "p13": {
+        "point": [
+          2329.3788510066147,
+          343.7754887138227
+        ],
+        "correlation": 0.9785473283552567,
+        "round_trip_px": 0.0013019297262919325,
+        "reason": ""
+      },
+      "p14": {
+        "point": [
+          1954.0002470652241,
+          2003.8989975264428
+        ],
+        "correlation": 0.9400365328395057,
+        "round_trip_px": 0.09025257913430683,
+        "reason": ""
+      },
+      "p15": {
+        "point": [
+          198.8898374622954,
+          1479.4730506956512
+        ],
+        "correlation": 0.9831972982082264,
+        "round_trip_px": 0.06563059029267328,
+        "reason": ""
+      }
+    },
+    "redone_labels": [
+      "p09"
+    ]
+  }
+}

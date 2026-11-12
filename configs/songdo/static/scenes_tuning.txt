@@ -1,0 +1,18 @@
+# Scene split for the Songdo static campaign: the tuning half.
+#
+# Passed to the runner with --scenes-list, which restricts a scenes directory to the names
+# listed here. One name per line; '#' starts a comment.
+#
+# The split is by site: sites in alphabetical order, every third one to tuning.
+#
+# 9 scene(s) over 7 site(s): A, E, H, K, N, Q, T
+
+2022-10-07_PM4_A_D1
+2022-10-07_PM4_A_D2
+2022-10-07_PM4_E_D2
+2022-10-07_PM4_H_D7
+2022-10-07_PM4_K_D6
+2022-10-07_PM4_N_D4
+2022-10-07_PM4_N_D5
+2022-10-07_PM4_Q_D8
+2022-10-07_PM4_T_D10

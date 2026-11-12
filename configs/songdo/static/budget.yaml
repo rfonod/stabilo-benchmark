@@ -1,0 +1,73 @@
+# =============================================================================
+# Part I: accuracy against compute budget.
+#
+#   stabilo-benchmark static configs/songdo/static/budget.yaml \
+#       --scenes data/songdo/static -v 1
+#
+# Sweeps `downsample_ratio` and `max_features` for every preset, under masking `none` and `obb`:
+# 10 presets x 4 ratios x 3 feature budgets x 2 maskings = 240 runs. `report` writes `maa` and
+# `time_median` per run. The matched operating point for the ranking campaigns is the lowest
+# budget at which every preset that can reach it is within 0.01 mAA of its own saturation under
+# both maskings. Part II's budgets are points of this grid: its cheapest point (real-time,
+# configs/songdo/dynamic/realtime_*.yaml) and 0.5 / 2000 (offline, offline_*.yaml).
+#
+# LoFTR is detector-free, so its three feature-budget runs are duplicates. A configuration that
+# does not fit in memory is recorded as infeasible and reported as N/A.
+# =============================================================================
+
+kind: static
+name: budget
+seed: 0
+trials: 30
+
+scenes:
+  dir: ../../../data/songdo/static # images/, labels_hbb/, labels_obb/
+
+perturbation:
+  geometric:
+    translation_ratio: 0.10
+    rotation_deg: 15.0
+    scale_ratio: 0.05
+    projective: 5.0e-5
+  photometric:
+    - { name: brightness, range: [0.75, 1.25] }
+    - { name: saturation, range: [0.95, 1.05] }
+    - { name: blur, max_ksize: 5 }
+    - { name: fog, max_density: 0.10 }
+    - { name: noise, max_sigma: 3.0 }
+    - { name: jpeg, quality: [70, 95] }
+
+metrics:
+  hea_thresholds: [1.0, 2.0, 3.0, 5.0, 10.0]
+  object_boxes: obb
+
+pipeline:
+  preset:
+    - orb
+    - sift
+    - rsift
+    - brisk
+    - akaze
+    - xfeat
+    - disk_lightglue
+    - dedode_lightglue
+    - keynet_lightglue
+    - loftr
+  masking: [none, obb]
+  # The budget is fixed before tuning, so it runs at the pre-tuning defaults. Keyed by detector
+  # name (see config.expand_grid).
+  filter_ratio: 0.9
+  ransac_epipolar_threshold:
+    orb: 2.0
+    sift: 3.0
+    rsift: 3.0
+    brisk: 2.5
+    akaze: 2.5
+    xfeat: 2.0
+    disk: 2.0
+    dedode: 2.0
+    keynet: 2.0
+    loftr: 2.0
+  # From Stabilizer.DL_PIXEL_BUDGETS' LoFTR ratio to the native frame.
+  downsample_ratio: [0.18, 0.30, 0.50, 1.00]
+  max_features: [1000, 2000, 8000]

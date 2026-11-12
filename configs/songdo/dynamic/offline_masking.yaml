@@ -1,0 +1,129 @@
+# =============================================================================
+# Part II, offline regime: the masking axis on real hovering-drone footage, for pipelines that
+# register recorded video after the flight, at the 0.5 / 2000-feature point of
+# configs/songdo/static/budget.yaml, with the inlier threshold in processed-image pixels.
+#
+#   stabilo-benchmark prepare video.mp4 -o <case> --reference <frame> --cell '<cell>' -c configs/songdo/dynamic/offline_masking.yaml
+#   stabilo-benchmark oracle  <case> -c configs/songdo/dynamic/offline_masking.yaml
+#   stabilo-benchmark annotate-gcp <case>
+#   stabilo-benchmark audit   <case>
+#   stabilo-benchmark dynamic <case> -c configs/songdo/dynamic/offline_masking.yaml -v 1
+#
+# The same pipelines, differing only in whether and how objects are masked before feature
+# detection. The reference frame and the cell come from `survey`.
+# =============================================================================
+
+kind: dynamic
+name: offline_masking
+seed: 0
+
+# 'first', 'middle', or a frame index; `prepare --reference` overrides it.
+reference: first
+
+# Measurements per frame pair. Raise it to measure run-to-run variation (USAC_PARALLEL, torch
+# detectors on a GPU).
+repeats: 1
+
+sampling:
+  # Every pair registers a sampled frame onto the reference. Offsets are stratified in bins one
+  # octave wide, 15 pairs in each bin that holds that many and every offset of the four shortest
+  # (15 together), so short offsets (objects shared with the reference) and long ones (objects
+  # turned over) carry comparable weight. 3600 frames is 2 min at 29.97 fps.
+  mode: stratified
+  per_bin: 15
+  bins:
+    - [1, 1]
+    - [2, 3]
+    - [4, 7]
+    - [8, 15]
+    - [16, 31]
+    - [32, 63]
+    - [64, 127]
+    - [128, 255]
+    - [256, 511]
+    - [512, 1023]
+    - [1024, 2047]
+    - [2048, 3600]
+  # Offset bins `survey` reads a candidate at, one offset per bin at its geometric center: the
+  # first second, while the objects in view at the reference are still shared with it.
+  survey_bins:
+    - [1, 1]
+    - [2, 3]
+    - [4, 7]
+    - [8, 15]
+    - [16, 31]
+  # Offset bins of the GCP audit: `annotate-gcp` picks two sampled frames in each, and `audit`
+  # summarizes the residual per bin.
+  audit_bins:
+    - [1, 3]
+    - [4, 31]
+    - [32, 511]
+    - [512, 3600]
+
+# The reference estimator; its error is bounded by `audit`.
+oracle:
+  preset: oracle
+  masking: obb
+
+metrics:
+  hea_thresholds: [1.0, 3.0, 5.0, 10.0]
+  # Boxes IoU and OCE are scored on, whatever the masking mode: obb (default) or hbb.
+  object_boxes: obb
+  photometric: [ssim, zncc, mi, gradient]
+  region:
+    # Constant-pixel margin around every object in both frames.
+    mask_dilation_px: 10
+    # Erosion of the region at the frame edges.
+    border_px: 8
+    # Below this area fraction a pair is scored as the identity warp.
+    min_area_fraction: 0.05
+    # Optional ground-plane polygon (LabelMe JSON or `x y` text).
+    ground_plane_roi: null
+    # Polygons over above-ground structure on the reference frame, a file inside each case
+    # directory (LabelMe JSON or `x y` text), excluded from the region; null for none.
+    exclusion: EXCLUSION.json
+
+# Nine floats per measurement; needed by `audit --results`.
+store_homographies: true
+
+# Every Part I pipeline, at the offline budget, under all three masking modes.
+pipeline:
+  preset:
+    - orb
+    - sift
+    - rsift
+    - brisk
+    - akaze
+    - xfeat
+    - disk_lightglue
+    - dedode_lightglue
+    - keynet_lightglue
+    - loftr
+  downsample_ratio: 0.5
+  max_features: 2000
+  ransac_threshold_space: processed
+  # Per-detector values selected by configs/songdo/dynamic/offline_tuning.yaml: a pipeline keeps
+  # Part I's values unless a grid point beats them by more than the mAA margin.
+  filter_ratio:
+    orb: 0.85
+    sift: 0.4
+    rsift: 0.7
+    brisk: 0.4
+    akaze: 0.4
+    xfeat: 0.45
+    disk: 0.9
+    dedode: 0.9
+    keynet: 0.9
+    loftr: 0.9
+  ransac_epipolar_threshold:
+    orb: 4.0
+    sift: 0.1
+    rsift: 0.5
+    brisk: 0.1
+    akaze: 0.1
+    xfeat: 8.0
+    disk: 2.0
+    dedode: 1.0
+    keynet: 4.0
+    loftr: 2.0
+  masking: [none, hbb, obb]

@@ -1,0 +1,134 @@
+# Continuous integration: lint, test suite, and packaging smoke test.
+name: CI
+
+# Runs when a file the tests or the build read changes.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "stabilo_benchmark/**"
+      - "tests/**"
+      - "configs/**"
+      - "data/**"
+      - "scripts/**"
+      - "README.md"
+      - "pyproject.toml"
+      - ".gitignore"
+      - ".gitattributes"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    paths:
+      - "stabilo_benchmark/**"
+      - "tests/**"
+      - "configs/**"
+      - "data/**"
+      - "scripts/**"
+      - "README.md"
+      - "pyproject.toml"
+      - ".gitignore"
+      - ".gitattributes"
+      - ".github/workflows/ci.yml"
+  workflow_dispatch:
+
+# A newer push to the same branch cancels the run it supersedes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint (ruff)
+    if: github.repository == 'rfonod/stabilo-benchmark'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install ruff
+        run: python -m pip install --upgrade pip ruff
+      - name: Ruff check
+        run: ruff check --output-format=github .
+
+  test:
+    # Every job runs the tests not marked `slow`. The slow ones, which run the pipeline on the
+    # sample's 4K frames, run once, on Linux with the oldest supported Python, split over two jobs.
+    name: Test (${{ matrix.os }}, Python ${{ matrix.python-version }}${{ matrix.slow && format(', slow {0}', matrix.slow) || '' }})
+    if: github.repository == 'rfonod/stabilo-benchmark'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {os: ubuntu-latest, python-version: "3.11"}
+          - {os: ubuntu-latest, python-version: "3.13"}
+          - {os: macos-latest, python-version: "3.11"}
+          - {os: windows-latest, python-version: "3.11"}
+          - {os: ubuntu-latest, python-version: "3.11", slow: "1/2"}
+          - {os: ubuntu-latest, python-version: "3.11", slow: "2/2"}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install system dependencies (Linux, for OpenCV)
+        if: runner.os == 'Linux'
+        run: |
+          for repo_file in \
+            /etc/apt/sources.list.d/microsoft-prod.list \
+            /etc/apt/sources.list.d/azure-cli.list \
+            /etc/apt/sources.list.d/packages-microsoft-prod.list \
+            /etc/apt/sources.list.d/microsoft-prod.sources \
+            /etc/apt/sources.list.d/azure-cli.sources; do
+            if [ -f "$repo_file" ]; then
+              sudo rm -f "$repo_file"
+            fi
+          done
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libgl1 libglib2.0-0
+      - name: Install CPU-only torch (Linux)
+        # stabilo depends on torch>=2.0.0 with no upper bound. On Linux, pip's default
+        # (CUDA-enabled) wheel drags in a full CUDA 13 toolkit (cudnn, cublas, nccl,
+        # triton, ...) that alone exceeds the runner's free disk and fails the next step
+        # with "No space left on device"; the test runners are CPU-only anyway. Installing
+        # the CPU wheel first satisfies the constraint, so the later resolve leaves it alone.
+        if: runner.os == 'Linux'
+        run: python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
+      - name: Install package with dev extras
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[dev]'
+      - name: Run tests
+        shell: bash
+        run: |
+          case "${{ matrix.slow }}" in
+            "") pytest -m "not slow" ;;
+            1/2) pytest -m slow tests/test_dynamic_runner.py tests/test_capture.py ;;
+            2/2) pytest -m slow --ignore=tests/test_dynamic_runner.py --ignore=tests/test_capture.py ;;
+          esac
+
+  build:
+    name: Build & packaging smoke test
+    if: github.repository == 'rfonod/stabilo-benchmark'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install build tooling
+        run: python -m pip install --upgrade pip build twine
+      - name: Build distributions
+        run: python -m build
+      - name: Check distributions
+        run: twine check dist/*
+      - name: Install CPU-only torch
+        # As in the test job: the default CUDA wheel and its toolkit are several GB to download.
+        run: python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
+      - name: Install the built wheel
+        run: python -m pip install dist/*.whl
+      - name: Smoke-test console script
+        run: |
+          stabilo-benchmark --version
+          stabilo-benchmark --help

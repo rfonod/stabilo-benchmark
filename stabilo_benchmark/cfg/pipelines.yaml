@@ -1,0 +1,131 @@
+# =============================================================================
+# stabilo-benchmark - named registration pipeline presets
+# =============================================================================
+# Each entry is a partial set of stabilo `Stabilizer` keyword arguments; keys absent from
+# stabilo's cfg/default.yaml are rejected by `pipelines.validate_spec`.
+#
+# `masking` (none | hbb | obb) is an experiment-config axis, and `mask_use` is derived from it;
+# neither is set here.
+#
+# `extends: <name>` inherits from another preset; keys given locally win.
+#
+# `filter_ratio` and `ransac_epipolar_threshold` of each benchmarked preset are its mAA-optimal point
+# in configs/songdo/static/tuning.yaml, on the tuning scenes. LightGlue and LoFTR do not apply the ratio
+# test, so only the threshold is set for them.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Shared baseline; every preset inherits from it.
+# -----------------------------------------------------------------------------
+base:
+  matcher_name: bf
+  filter_type: ratio
+  filter_ratio: 0.9
+  transformation_type: projective
+  ransac_method: 38          # MAGSAC++
+  ransac_epipolar_threshold: 2.0
+  ransac_max_iter: 5000
+  ransac_confidence: 0.999999
+  clahe: false
+  downsample_ratio: 1.0      # matched operating point, from configs/songdo/static/budget.yaml
+  max_features: 8000
+  ref_multiplier: 2.0
+  mask_margin_ratio: 0.15
+
+# -----------------------------------------------------------------------------
+# Classical detectors (OpenCV).
+# -----------------------------------------------------------------------------
+orb:
+  extends: base
+  detector_name: orb
+  filter_ratio: 0.85
+  ransac_epipolar_threshold: 4.0
+
+sift:
+  extends: base
+  detector_name: sift
+  filter_ratio: 0.7
+  ransac_epipolar_threshold: 0.5
+
+rsift:
+  extends: base
+  detector_name: rsift
+  filter_ratio: 0.7
+  ransac_epipolar_threshold: 0.5
+
+brisk:
+  extends: base
+  detector_name: brisk
+  filter_ratio: 0.7
+  ransac_epipolar_threshold: 1.5
+
+kaze:
+  extends: base
+  detector_name: kaze
+  filter_ratio: 0.7
+  ransac_epipolar_threshold: 0.5
+
+akaze:
+  extends: base
+  detector_name: akaze
+  filter_ratio: 0.7
+  ransac_epipolar_threshold: 4.0
+
+# -----------------------------------------------------------------------------
+# Learning-based detectors / matchers (kornia, via stabilo >= 1.4.0).
+#
+# `pipelines.check_resolution` warns when a preset exceeds Stabilizer.DL_PIXEL_BUDGETS; a
+# configuration the machine cannot hold is recorded as infeasible and reported as N/A.
+#
+# xfeat / disk / dedode / loftr are upright models: matching degrades past roughly 30 degrees of
+# in-plane rotation. keynet estimates keypoint orientation.
+#
+# lightglue accepts only the detectors in Stabilizer.LIGHTGLUE_FEATURE_NAMES (disk, dedode,
+# keynet), not xfeat.
+# -----------------------------------------------------------------------------
+xfeat:
+  extends: base
+  detector_name: xfeat
+  matcher_name: bf
+  filter_ratio: 0.7
+  ransac_epipolar_threshold: 2.0
+
+disk_lightglue:
+  extends: base
+  detector_name: disk
+  matcher_name: lightglue
+  ransac_epipolar_threshold: 2.0
+
+dedode_lightglue:
+  extends: base
+  detector_name: dedode
+  matcher_name: lightglue
+  ransac_epipolar_threshold: 1.0
+  dedode_detector_weights: L-C4-v2
+  dedode_descriptor_weights: B-upright
+
+keynet_lightglue:
+  extends: base
+  detector_name: keynet
+  matcher_name: lightglue
+  ransac_epipolar_threshold: 4.0
+
+loftr:
+  extends: base
+  detector_name: loftr       # detector-free: matcher_name / filter_type are ignored
+  loftr_weights: outdoor
+  loftr_confidence: 0.0
+
+# -----------------------------------------------------------------------------
+# Reference estimator (pseudo-ground truth) for the dynamic benchmark: the sift preset with its
+# tuned ratio test and inlier threshold, at full resolution with a larger feature budget and a
+# stricter estimator. Its error is bounded by `stabilo-benchmark audit`.
+# -----------------------------------------------------------------------------
+oracle:
+  extends: sift
+  downsample_ratio: 1.0
+  max_features: 20000
+  ref_multiplier: 2.0
+  ransac_max_iter: 20000
+  ransac_confidence: 0.9999999
+  mask_margin_ratio: 0.20

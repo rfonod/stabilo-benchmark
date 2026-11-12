@@ -1,0 +1,37 @@
+# =============================================================================
+# Part I: registration accuracy against in-plane rotation.
+#
+#   for deg in 0 5 10 15 20 30 45 60 90; do
+#     stabilo-benchmark static configs/songdo/static/rotation_sweep.yaml \
+#       --scenes data/songdo/static --set perturbation.geometric.rotation_deg="[$deg,$deg]" \
+#       --name "rotation_${deg}deg"
+#   done
+#
+# One invocation per rotation magnitude; `[v, v]` fixes the angle. xfeat, disk, dedode and loftr
+# do not estimate keypoint orientation; keynet and the classical detectors do.
+# =============================================================================
+
+kind: static
+name: rotation_sweep
+seed: 0
+trials: 50
+
+scenes:
+  dir: ../../../data/songdo/static # images/, labels_hbb/, labels_obb/
+
+perturbation:
+  geometric:
+    translation_ratio: 0.05
+    rotation_deg: [15.0, 15.0] # fixed magnitude; override per run with --set
+    scale_ratio: 0.02
+    projective: 0.0
+  photometric: [] # isolate the geometric effect: no photometric confound
+
+metrics:
+  hea_thresholds: [1.0, 3.0, 5.0, 10.0]
+  # Boxes IoU and OCE are scored on, whatever the masking mode: obb (default) or hbb.
+  object_boxes: obb
+
+pipeline:
+  preset: [sift, orb, xfeat, disk_lightglue, dedode_lightglue, keynet_lightglue, loftr]
+  masking: [obb]

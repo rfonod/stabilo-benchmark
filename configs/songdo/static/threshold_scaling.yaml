@@ -1,0 +1,65 @@
+# =============================================================================
+# Part I: does the inlier threshold need rescaling with `downsample_ratio`?
+#
+#   stabilo-benchmark static configs/songdo/static/threshold_scaling.yaml \
+#       --scenes data/songdo/static --scenes-list configs/songdo/static/scenes_tuning.txt
+#
+# Needed only when tuning did not run at the ratio the evaluation campaigns use. Runs on the
+# tuning scenes.
+#
+# stabilo applies `ransac_epipolar_threshold` in full-resolution pixels, while keypoint
+# localization error grows as 1 / downsample_ratio. This sweeps the threshold at two ratios with
+# each preset's tuned `filter_ratio`: 10 presets x 2 ratios x 8 thresholds = 160 runs, masking
+# `none`.
+#
+# Per preset, compare the maa-optimal threshold at 0.18 with the one at 0.50:
+#   ratio ~ 2.8   noise-limited: use `ransac_threshold_space: processed`.
+#   ratio ~ 1.0   model-error-limited: keep the threshold in full-resolution pixels.
+#   otherwise     tune the threshold per budget.
+# =============================================================================
+
+kind: static
+name: threshold_scaling
+seed: 0
+trials: 30
+
+scenes:
+  dir: ../../../data/songdo/static # images/, labels_hbb/, labels_obb/
+
+# Identical to tuning.yaml and detectors.yaml.
+perturbation:
+  geometric:
+    translation_ratio: 0.10
+    rotation_deg: 15.0
+    scale_ratio: 0.05
+    projective: 5.0e-5
+  photometric:
+    - { name: brightness, range: [0.75, 1.25] }
+    - { name: saturation, range: [0.95, 1.05] }
+    - { name: blur, max_ksize: 5 }
+    - { name: fog, max_density: 0.10 }
+    - { name: noise, max_sigma: 3.0 }
+    - { name: jpeg, quality: [70, 95] }
+
+metrics:
+  hea_thresholds: [1.0, 2.0, 3.0, 5.0, 10.0]
+  object_boxes: obb
+
+pipeline:
+  preset:
+    - orb
+    - sift
+    - rsift
+    - brisk
+    - akaze
+    - xfeat
+    - disk_lightglue
+    - dedode_lightglue
+    - keynet_lightglue
+    - loftr
+  masking: [none]
+  # Two ratios every preset can run at 4K.
+  downsample_ratio: [0.18, 0.50]
+  # A factor of 16.
+  ransac_epipolar_threshold: [0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0]
+  # filter_ratio: each preset's tuned value from cfg/pipelines.yaml.

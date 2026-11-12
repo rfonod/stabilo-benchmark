@@ -1,0 +1,10 @@
+# Part II tuning cases: the selection of `stabilo-benchmark survey` over the 2022-10-06 tuning-site pool
+# (command in docs/songdo_dynamic.md, section 3). One row per case: name, cell, source, reference frame.
+# Descriptors are fractions of the frame averaged over the survey offsets.
+#
+# name                   cell                    source                                         ref  cover  moving  coherence  stationarity
+2022-10-06_D6_PM4_K4   high moving / coherent  data/songdo/videos/2022-10-06/D6/PM4/K4.MP4   1178  4.42%   1.24%       0.71          0.69
+2022-10-06_D10_PM4_T2  high moving / mixed     data/songdo/videos/2022-10-06/D10/PM4/T2.MP4   223  4.42%   1.61%       0.24          0.59
+2022-10-06_D2_PM2_E1   low moving / coherent   data/songdo/videos/2022-10-06/D2/PM2/E1.MP4    205  0.69%   0.15%       0.61          0.75
+2022-10-06_D4_AM2_N2   low moving / mixed      data/songdo/videos/2022-10-06/D4/AM2/N2.MP4    217  1.37%   0.30%       0.26          0.77
+2022-10-06_D7_PM5_H1   stationary control      data/songdo/videos/2022-10-06/D7/PM5/H1.MP4   3000  2.55%   0.16%          -          0.94

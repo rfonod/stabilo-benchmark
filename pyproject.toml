@@ -1,0 +1,118 @@
+# ==============================================================
+# Stabilo Benchmark - MIT License
+# ==============================================================
+# Overview:
+# Build system and project metadata for the Stabilo Benchmark package.
+#
+# Installation:
+#   pip install -e .                                      # core (editable)
+#   pip install -e '.[dev]'                               # core + dev
+#   uv venv --python 3.11 && uv pip install -e '.[dev]'
+# ==============================================================
+
+[build-system]
+requires = ["setuptools>=77.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stabilo-benchmark"
+dynamic = ["version"]
+description = "Reproducible static and dynamic benchmarks for reference-based UAV video stabilization with Stabilo"
+# Separate name and email entries, so the 'Author' metadata field is populated.
+authors = [
+    { name = "Robert Fonod" },
+    { email = "robert.fonod@ieee.org" },
+]
+maintainers = [
+    { name = "Robert Fonod" },
+    { email = "robert.fonod@ieee.org" },
+]
+readme = "README.md"
+# Table form emits the 'License' metadata field. Do not add 'license-files' alongside it
+# (setuptools then fails with `project.license must be string`).
+license = { text = "MIT" }
+requires-python = ">=3.11"
+keywords = [
+    "video-stabilization",
+    "image-registration",
+    "homography-estimation",
+    "feature-matching",
+    "benchmark",
+    "oriented-bounding-boxes",
+    "aerial-video-analysis",
+    "uav",
+    "dynamic-scenes",
+    "traffic-monitoring",
+    "computer-vision",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Image Processing",
+    "Topic :: Multimedia :: Video",
+    "License :: OSI Approved :: MIT License",
+]
+
+# OpenCV 5.0 removed the Python bindings for BRISK, KAZE and AKAZE. Other distributions providing
+# `cv2` can shadow this bound; stabilo_benchmark/environment.py checks it at run time.
+dependencies = [
+    "stabilo>=1.4.5",
+    "hbb2obb>=1.12.0",
+    "opencv-python>=4.10.0,<5.0.0",
+    "matplotlib>=3.9.0",
+    "pandas>=2.2.0",
+    "psutil>=6.1.0",
+    "pyyaml>=6.0",
+    "shapely>=2.0.0",
+    "tqdm>=4.64.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "ruff>=0.11.0",
+    "scikit-image>=0.24.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/rfonod/stabilo-benchmark/"
+Repository = "https://github.com/rfonod/stabilo-benchmark/"
+Changelog = "https://github.com/rfonod/stabilo-benchmark/releases"
+Issues = "https://github.com/rfonod/stabilo-benchmark/issues/"
+
+[project.scripts]
+stabilo-benchmark = "stabilo_benchmark.cli:main"
+
+[tool.setuptools]
+packages = { find = { where = ["."], include = ["stabilo_benchmark", "stabilo_benchmark.*"] } }
+
+[tool.setuptools.package-data]
+stabilo_benchmark = ["cfg/*.yaml"]
+
+[tool.setuptools.dynamic]
+version = { attr = "stabilo_benchmark.__version__" }
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ['E', 'F', 'W', 'A', "B", 'PLC', 'PLE', 'PLW', 'I']
+
+[tool.ruff.format]
+docstring-code-format = true
+quote-style = "preserve"
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra"
+markers = [
+    "slow: runs the pipeline on the sample's 4K frames (CI runs these once, on Linux)",
+]
+testpaths = [
+    "tests",
+]

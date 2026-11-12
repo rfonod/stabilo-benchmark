@@ -1,0 +1,54 @@
+# =============================================================================
+# Part I: detector / descriptor / matcher families x masking strategy.
+#
+#   stabilo-benchmark static configs/songdo/static/detectors.yaml \
+#       --scenes data/songdo/static -v 1
+#
+# 10 pipelines x 3 masking strategies = 30 runs. Run the learning-based presets on a GPU.
+#
+# The objects in a static scene do not move, so masking can only remove correspondences here;
+# a small cost from masking is expected in Part I.
+# =============================================================================
+
+kind: static
+name: detectors
+seed: 0
+trials: 100
+
+scenes:
+  dir: ../../../data/songdo/static # images/, labels_hbb/, labels_obb/
+
+perturbation:
+  geometric:
+    translation_ratio: 0.10
+    rotation_deg: 15.0
+    scale_ratio: 0.05
+    projective: 5.0e-5
+  photometric:
+    - { name: brightness, range: [0.75, 1.25] }
+    - { name: saturation, range: [0.95, 1.05] }
+    - { name: blur, max_ksize: 5 }
+    - { name: fog, max_density: 0.10 }
+    - { name: noise, max_sigma: 3.0 }
+    - { name: jpeg, quality: [70, 95] }
+
+metrics:
+  hea_thresholds: [1.0, 2.0, 3.0, 5.0, 10.0]
+  # Boxes IoU and OCE are scored on, whatever the masking mode: obb (default) or hbb.
+  object_boxes: obb
+
+pipeline:
+  preset:
+    # Classical (OpenCV)
+    - orb
+    - sift
+    - rsift
+    - brisk
+    - akaze
+    # Learning-based (kornia, via stabilo >= 1.4.0)
+    - xfeat
+    - disk_lightglue
+    - dedode_lightglue
+    - keynet_lightglue
+    - loftr
+  masking: [none, hbb, obb]

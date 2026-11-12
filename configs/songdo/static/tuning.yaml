@@ -1,0 +1,61 @@
+# =============================================================================
+# Part I: per-pipeline tuning of the ratio test and the inlier threshold, on the tuning scenes.
+#
+#   stabilo-benchmark static configs/songdo/static/tuning.yaml \
+#       --scenes data/songdo/static --scenes-list configs/songdo/static/scenes_tuning.txt
+#
+#   filter_ratio               the Lowe ratio test
+#   ransac_epipolar_threshold  the inlier threshold, in reference-frame pixels
+#
+# Both are swept jointly: 6 presets x 10 ratios x 8 thresholds, plus 8 thresholds for each of the 4
+# presets that do not apply the ratio test (LightGlue, LoFTR) = 512 runs. The tuning scenes must
+# be disjoint from the evaluation scenes. A preset keeps its values in
+# `stabilo_benchmark/cfg/pipelines.yaml` unless a grid point beats them by more than the mAA
+# equivalence margin; write any replaced pair there (`report` writes them to `tuned_parameters.tex`).
+# =============================================================================
+
+kind: static
+name: tuning
+seed: 0
+trials: 30
+
+scenes:
+  dir: ../../../data/songdo/static # images/, labels_hbb/, labels_obb/
+
+# Identical to detectors.yaml.
+perturbation:
+  geometric:
+    translation_ratio: 0.10
+    rotation_deg: 15.0
+    scale_ratio: 0.05
+    projective: 5.0e-5
+  photometric:
+    - { name: brightness, range: [0.75, 1.25] }
+    - { name: saturation, range: [0.95, 1.05] }
+    - { name: blur, max_ksize: 5 }
+    - { name: fog, max_density: 0.10 }
+    - { name: noise, max_sigma: 3.0 }
+    - { name: jpeg, quality: [70, 95] }
+
+metrics:
+  hea_thresholds: [1.0, 2.0, 3.0, 5.0, 10.0]
+  # Boxes IoU and OCE are scored on, whatever the masking mode: obb (default) or hbb.
+  object_boxes: obb
+
+pipeline:
+  preset:
+    - orb
+    - sift
+    - rsift
+    - brisk
+    - akaze
+    - xfeat
+    - disk_lightglue
+    - dedode_lightglue
+    - keynet_lightglue
+    - loftr
+  # Masking is held at `none`.
+  masking: [none]
+  # 0.9 is stabilo's default.
+  filter_ratio: [0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 0.9, 0.93, 0.96, 0.99]
+  ransac_epipolar_threshold: [0.25, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 8.0]

@@ -1,0 +1,29 @@
+# Scene split for the Songdo static campaign: the evaluation half.
+#
+# Passed to the runner with --scenes-list, which restricts a scenes directory to the names
+# listed here. One name per line; '#' starts a comment.
+#
+# The split is by site: sites in alphabetical order, every third one to tuning.
+#
+# 20 scene(s) over 13 site(s): B, C, F, G, I, J, L, M, O, P, R, S, U
+
+2022-10-07_PM4_B_D1
+2022-10-07_PM4_C_D1
+2022-10-07_PM4_F_D2
+2022-10-07_PM4_F_D3
+2022-10-07_PM4_G_D4
+2022-10-07_PM4_I_D3
+2022-10-07_PM4_J_D4
+2022-10-07_PM4_J_D6
+2022-10-07_PM4_L_D6
+2022-10-07_PM4_L_D7
+2022-10-07_PM4_M_D3
+2022-10-07_PM4_M_D5
+2022-10-07_PM4_M_D8
+2022-10-07_PM4_O_D5
+2022-10-07_PM4_P_D7
+2022-10-07_PM4_R_D8
+2022-10-07_PM4_R_D9
+2022-10-07_PM4_S_D10
+2022-10-07_PM4_S_D9
+2022-10-07_PM4_U_D10

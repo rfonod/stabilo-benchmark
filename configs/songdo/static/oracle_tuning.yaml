@@ -1,0 +1,48 @@
+# =============================================================================
+# The reference estimator's ratio test and inlier threshold, tuned as Part I tunes every pipeline:
+# jointly, on mAA, on the tuning scenes, at the reference estimator's own feature budget and
+# estimator settings and with its masking.
+#
+#   ./scripts/songdo_static.sh oracle_tuning
+#
+# 10 ratios x 7 thresholds = 70 runs. Write the mAA-optimal pair into the `oracle` preset of
+# `stabilo_benchmark/cfg/pipelines.yaml`; until then it inherits the sift preset's values, which
+# the report's default column compares against.
+# =============================================================================
+
+kind: static
+name: oracle_tuning
+seed: 0
+trials: 30
+
+scenes:
+  dir: ../../../data/songdo/static # images/, labels_hbb/, labels_obb/
+
+# Identical to detectors.yaml.
+perturbation:
+  geometric:
+    translation_ratio: 0.10
+    rotation_deg: 15.0
+    scale_ratio: 0.05
+    projective: 5.0e-5
+  photometric:
+    - { name: brightness, range: [0.75, 1.25] }
+    - { name: saturation, range: [0.95, 1.05] }
+    - { name: blur, max_ksize: 5 }
+    - { name: fog, max_density: 0.10 }
+    - { name: noise, max_sigma: 3.0 }
+    - { name: jpeg, quality: [70, 95] }
+
+metrics:
+  hea_thresholds: [1.0, 2.0, 3.0, 5.0, 10.0]
+  # Boxes IoU and OCE are scored on, whatever the masking mode: obb (default) or hbb.
+  object_boxes: obb
+
+pipeline:
+  preset: [oracle]
+  # The reference estimator runs masked, so it is tuned masked.
+  masking: [obb]
+  # Part I's grid, extended below its lowest ratio (two steps) and threshold (one step), where the
+  # sift preset's tuned values sit.
+  filter_ratio: [0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.93, 0.96, 0.99]
+  ransac_epipolar_threshold: [0.25, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0]

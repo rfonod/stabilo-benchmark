@@ -1,0 +1,2 @@
+# The sample is a byte-for-byte copy of files of the data record: no line-ending conversion.
+data/sample/** -text

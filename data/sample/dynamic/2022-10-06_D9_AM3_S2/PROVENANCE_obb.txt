@@ -1,0 +1,73 @@
+HBB2OBB conversion provenance
+==============================================================================
+
+Written        : 2026-10-26 13:04:52 UTC
+hbb2obb        : 1.12.0
+source sha256  : 2b20132f45222bb65876f44e6331615f872c9385a6f66e348f389435d3cc748b  (16 files)
+git commit     : not a git checkout
+
+Command that reproduces these annotations
+------------------------------------------------------------------------------
+hbb2obb dynamic/2022-10-06_D9_AM3_S2/images --hbb_dir dynamic/2022-10-06_D9_AM3_S2/labels_hbb --obb_dir dynamic/2022-10-06_D9_AM3_S2/labels_obb --sam_models sam_l --imgsz 1024 --scale_factors 0.02 --opening_kernel_percentage -0.1 --fragment_ratio 0.1 --confidence_dir --device mps
+
+Conversion settings
+------------------------------------------------------------------------------
+SAM ensemble             : sam_l (1 model(s))
+Inference image size     : 1024
+Scale factor(s)          : 0.02
+Opening kernel           : -0.1
+Fragment ratio           : 0.1
+Confidence source        : conversion
+Confidence written       : side-car (default location)
+Coordinates              : absolute pixels
+Inference device         : mps
+
+SAM checkpoints
+------------------------------------------------------------------------------
+sam_l
+    path   : models/sam_l.pt
+    size   : 1249524607 bytes
+    sha256 : 3adcc4315b642a4d2101128f611684e8734c41232a17c648ed1693702a49a622
+
+Environment
+------------------------------------------------------------------------------
+python         : 3.11.15
+platform       : macOS-27.0.1-arm64-arm-64bit
+machine        : arm64
+ultralytics    : 8.4.153
+torch          : 2.14.0
+torchvision    : 0.29.0
+opencv-python  : 4.14.0.94
+numpy          : 2.4.6
+shapely        : 2.1.2
+matplotlib     : 3.11.2
+PyYAML         : 6.0.3
+
+Inputs and outputs
+------------------------------------------------------------------------------
+images         : dynamic/2022-10-06_D9_AM3_S2/images
+image count    : 136
+HBB labels     : dynamic/2022-10-06_D9_AM3_S2/labels_hbb
+HBB sha256     : f1a313bc0d2461d7157e062f2a8a9974ea5c74b6dedbad0c660b0ff5c9c09e2f  (136 files)
+OBB labels     : dynamic/2022-10-06_D9_AM3_S2/labels_obb
+OBB count      : 136 .txt files
+OBB boxes      : 10871
+HBB fallbacks  : 0 (0.00%)
+
+Reproducibility
+------------------------------------------------------------------------------
+Code. Install the version this ran from with
+    pip install hbb2obb==1.12.0
+and compare its source sha256 with the one above. That digest is computed from the
+package source, so it still matches after a branch has been squashed, rebased or
+deleted, which a commit hash does not; use the commit to find the change, the digest
+to prove you have the same code.
+
+Checkpoints. Verify each one against the SHA-256 above before concluding that a
+mismatch is a bug in the conversion: ultralytics downloads by name, and the file
+behind a name can change between asset releases.
+
+Determinism. The conversion is deterministic given the same images, the same HBB
+inputs, the same checkpoints and the same library versions. SAM inference is not
+bit-reproducible across torch builds and hardware, so expect a box or two to move by
+a pixel on a different machine.

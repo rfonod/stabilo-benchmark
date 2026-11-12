@@ -1,0 +1,116 @@
+# =============================================================================
+# Dataset registry: the Zenodo datasets `fetch` can download, starting with the paper's data record,
+# which holds every input and output of both parts.
+#
+#   stabilo-benchmark fetch --list           what is registered and what is present
+#   stabilo-benchmark fetch songdo           download, verify, extract into data/songdo/
+#   stabilo-benchmark fetch                  the same: songdo is marked `default: true`
+#   stabilo-benchmark fetch --check          re-verify what is already on disk
+#
+# Paths in `dest` are relative to this file's directory (`data/`); see data/README.md. The
+# committed sample under sample/ does not need anything registered here.
+#
+# `md5` and `size` are the values of the published Zenodo record. `fetch` verifies each file
+# against the pinned values, or against the checksum Zenodo reports when none is pinned. An
+# archive's `extracted_size` is the bytes its entries take once extracted; `fetch` counts it, with
+# the download, against the free space before it starts.
+#
+# Each entry pins one version of its record: a Zenodo version has its own record id and DOI, so
+# a later version is never fetched by accident. A release of this repository that moves to a new
+# version changes `version`, `doi`, `record` and `files` together; an earlier tag still fetches the
+# version it was run with. `fetch` refuses to extract one version over another.
+#
+# Adding a dataset: if you publish data in the benchmark's layout on Zenodo (scene sets of images/
+# with labels_hbb/ and labels_obb/, or prepared cases with CASE.json, as under sample/), open a pull
+# request that adds its entry here, so that others can fetch it by name. The record must be public
+# and openly licensed; pin its version DOI (not the concept DOI), every file's size and MD5, which
+# the record page lists, and each archive's extracted size (for a zip, the total `unzip -l`
+# prints). Before opening it, run `stabilo-benchmark fetch <name>` from a clean
+# clone and `pytest tests/test_datasets.py`. Leave `default` out: it marks the one dataset a bare
+# `fetch` downloads. An entry looks like this:
+#
+#   my_dataset:
+#     title: 'What the data is'
+#     version: v1
+#     doi: 10.5281/zenodo.<id>         # the version DOI
+#     record: <id>                     # the number in the record's URL
+#     license: CC-BY-4.0
+#     dest: my_dataset                 # extracted into data/my_dataset/
+#     used_for: >
+#       What the benchmark runs on it, and where in the extracted tree.
+#     files:
+#       - name: scenes.zip
+#         size: 123456789              # bytes
+#         md5: 0123456789abcdef0123456789abcdef
+#         extract: true
+#         extracted_size: 234567890    # bytes once extracted
+# =============================================================================
+
+version: 1
+
+datasets:
+  # ---------------------------------------------------------------------------
+  # The paper's experiment over Songdo: Part I's scenes, Part II's cases and every campaign's
+  # results, one archive per part. The record id is the suffix of its DOI.
+  # ---------------------------------------------------------------------------
+  songdo:
+    title: 'Accompanying data for the paper "Consensus Capture in Reference-Based UAV Video Stabilization: A Benchmark on Dynamic Urban Scenes"'
+    version: v1
+    doi: 10.5281/zenodo.23623540
+    record: 23623540
+    published: true
+    default: true
+    license: CC-BY-4.0
+    citation: stabilo_benchmark_data
+    dest: songdo
+    used_for: >
+      Both parts at full scale with the results behind every table and figure, in five
+      archives that extract into this directory, in the layout of the committed sample.
+      static.zip is Part I: static/ holds the 29 4K frames of the background paper's
+      static campaign with their horizontal and oriented vehicle boxes, and
+      static/results/ one directory per Part I campaign. dynamic.zip is Part II:
+      dynamic/ holds the nine prepared cases (sampled frames, both label geometries,
+      CASE.json, EXCLUSION.json, the hand-annotated ground control points, the reference
+      estimator's cache and audit, and results/<campaign> inside each case), and
+      survey/ the SURVEY.json the cases were selected from. dynamic_tuning.zip holds the
+      five tuning cases with their tuning campaigns, and survey_tuning/ their selection.
+      Cases are distributed as prepared frames, not as source recordings, so a campaign
+      reproduces without the videos. supplementary.zip holds the CSV files the paper names,
+      with an index, and the scripts of its checks outside the benchmark; configs.zip holds a
+      copy of configs/songdo/ (the campaign configs, scene split and case lists). Every
+      campaign directory carries the MANIFEST.json recording the config, the grid, the
+      versions and the hardware it ran on.
+    files:
+      - name: static.zip
+        size: 309024929
+        md5: 3d2bf23c31bf83368487f9ffeaca0e64
+        extract: true
+        extracted_size: 1246536176
+      - name: dynamic.zip
+        size: 3724005483
+        md5: dfeb6cfad5988945862f59197b94ed1f
+        extract: true
+        extracted_size: 4104548216
+      - name: dynamic_tuning.zip
+        size: 2171238476
+        md5: f588d19782cd37387a75db2d0b594bf3
+        extract: true
+        extracted_size: 3336570351
+      - name: supplementary.zip
+        size: 415068
+        md5: ab654659c55b3ef15fe2259d74be1b86
+        extract: true
+        extracted_size: 1851300
+      - name: configs.zip
+        size: 19657
+        md5: 34fe0d7fdb939d05387378ec4af9d376
+        extract: true
+        extracted_size: 38239
+      - name: LICENSE.txt
+        size: 18656
+        md5: 527dc6cad772ccb187d5bfe5af738204
+      # README.md and SHA256SUMS are not pinned: the README can be updated on the record with
+      # identifiers assigned after publication, and SHA256SUMS lists it. fetch verifies both
+      # against the checksum Zenodo reports.
+      - name: README.md
+      - name: SHA256SUMS

@@ -1,0 +1,14 @@
+# Part II cases: the selection of `stabilo-benchmark survey` over the 2022-10-06 pool
+# (command in docs/songdo_dynamic.md, section 1). One row per case: name, cell, source, reference frame.
+# Descriptors are fractions of the frame averaged over the survey offsets.
+#
+# name                   cell                    source                                         ref  cover  moving  coherence  stationarity
+2022-10-06_D10_PM5_U1  high moving / coherent  data/songdo/videos/2022-10-06/D10/PM5/U1.MP4  1170  3.00%   1.94%       0.80          0.25
+2022-10-06_D3_PM3_F2   high moving / coherent  data/songdo/videos/2022-10-06/D3/PM3/F2.MP4    259  1.94%   1.43%       0.72          0.17
+2022-10-06_D9_AM3_S2   high moving / mixed     data/songdo/videos/2022-10-06/D9/AM3/S2.MP4    300  3.96%   1.89%       0.22          0.48
+2022-10-06_D1_PM1_B2   high moving / mixed     data/songdo/videos/2022-10-06/D1/PM1/B2.MP4    240  3.29%   1.48%       0.22          0.50
+2022-10-06_D7_PM1_P1   low moving / coherent   data/songdo/videos/2022-10-06/D7/PM1/P1.MP4    300  1.81%   0.17%       0.74          0.90
+2022-10-06_D3_AM1_M1   low moving / coherent   data/songdo/videos/2022-10-06/D3/AM1/M1.MP4    237  0.92%   0.18%       0.59          0.79
+2022-10-06_D7_PM5_P2   low moving / mixed      data/songdo/videos/2022-10-06/D7/PM5/P2.MP4   1200  2.35%   0.24%       0.23          0.89
+2022-10-06_D8_PM3_M1   low moving / mixed      data/songdo/videos/2022-10-06/D8/PM3/M1.MP4   1162  1.77%   0.26%       0.25          0.84
+2022-10-06_D9_AM1_R1   stationary control      data/songdo/videos/2022-10-06/D9/AM1/R1.MP4   2100  2.02%   0.00%          -          1.00

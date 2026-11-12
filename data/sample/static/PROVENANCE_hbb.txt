@@ -1,0 +1,79 @@
+HBB2OBB detection provenance
+==============================================================================
+
+Written        : 2026-09-16 16:34:03 UTC
+hbb2obb        : 1.11.1
+source sha256  : 22e44bdabe177d9bb7bc0a2d21624f847705dd6f80abb2c9f22f4ad20e66d887  (16 files)
+git commit     : not a git checkout
+
+Command that reproduces these annotations
+------------------------------------------------------------------------------
+hbb2obb-detect static/images --hbb_dir static/labels_hbb --model geotrax --imgsz 1920 --conf 0.25 --iou 0.45 --classes 0 1 2 3 --device mps --precision 2 --no_confidence
+
+Detection settings
+------------------------------------------------------------------------------
+Model                    : geotrax
+Inference image size     : 1920
+Confidence threshold     : 0.25
+NMS IoU threshold        : 0.45
+Classes kept             : 0 1 2 3
+Class map                : none, detector numbering
+Max detections per image : ultralytics default
+Confidence written       : not written
+Coordinates              : absolute pixels, 2 decimals
+Inference device         : mps
+
+Detector checkpoint
+------------------------------------------------------------------------------
+geotrax
+    path   : models/geotrax_hbb_yolov8s_1920_v1.pt
+    size   : 22927726 bytes
+    sha256 : 7d462ae523b15f3679a83f74ab08aa79d2978f319ca2f0cf2892fbbb60df79da
+
+Detector licence and attribution
+------------------------------------------------------------------------------
+Model page     : https://huggingface.co/rfonod/geo-trax
+Hub revision   : bfb79e7a29334fc7cec7cfc2eb08fca0cd91d9d5
+Licence        : cc-by-4.0
+DOI            : https://doi.org/10.57967/hf/9296
+arXiv          : https://arxiv.org/abs/2411.02136
+Credit the weights as their licence requires; the model page says how to cite them.
+
+Environment
+------------------------------------------------------------------------------
+python         : 3.11.15
+platform       : macOS-26.6.2-arm64-arm-64bit
+machine        : arm64
+ultralytics    : 8.4.153
+torch          : 2.14.0
+torchvision    : 0.29.0
+opencv-python  : 4.14.0.94
+numpy          : 2.4.6
+shapely        : 2.1.2
+matplotlib     : 3.11.2
+PyYAML         : 6.0.3
+
+Inputs and outputs
+------------------------------------------------------------------------------
+images         : static/images
+image count    : 29
+HBB labels     : static/labels_hbb
+HBB sha256     : b549a1dd703aedabf8eeeab9a8626e39dcca49b4af8c75540f224be7b5f3d4bb  (29 files)
+
+Reproducibility
+------------------------------------------------------------------------------
+Code. Install the version this ran from with
+    pip install hbb2obb==1.11.1
+and compare its source sha256 with the one above. That digest is computed from the
+package source, so it still matches after a branch has been squashed, rebased or
+deleted, which a commit hash does not; use the commit to find the change, the digest
+to prove you have the same code.
+
+Checkpoints. Verify each one against the SHA-256 above before concluding that a
+mismatch is a bug in the conversion: ultralytics downloads by name, and the file
+behind a name can change between asset releases.
+
+Determinism. The conversion is deterministic given the same images, the same HBB
+inputs, the same checkpoints and the same library versions. SAM inference is not
+bit-reproducible across torch builds and hardware, so expect a box or two to move by
+a pixel on a different machine.
