@@ -1,11 +1,11 @@
 # Stabilo Benchmark
 
-[![GitHub Release](https://img.shields.io/github/v/release/rfonod/stabilo-benchmark?include_prereleases)](https://github.com/rfonod/stabilo-benchmark/releases) [![PyPI - Version](https://img.shields.io/pypi/v/stabilo-benchmark)](https://pypi.org/project/stabilo-benchmark/) [![PyPI - Total Downloads](https://img.shields.io/pepy/dt/stabilo-benchmark?label=total%20downloads)](https://pepy.tech/project/stabilo-benchmark) [![CI](https://github.com/rfonod/stabilo-benchmark/actions/workflows/ci.yml/badge.svg)](https://github.com/rfonod/stabilo-benchmark/actions/workflows/ci.yml) [![Python](https://img.shields.io/badge/python-3.11--3.13-blue)](https://www.python.org/) [![License](https://img.shields.io/github/license/rfonod/stabilo-benchmark)](https://github.com/rfonod/stabilo-benchmark/blob/main/LICENSE) [![GitHub Issues](https://img.shields.io/github/issues/rfonod/stabilo-benchmark)](https://github.com/rfonod/stabilo-benchmark/issues) [![Data](https://img.shields.io/badge/Zenodo-Data%2010.5281%2Fzenodo.23623540-blue)](https://doi.org/10.5281/zenodo.23623540)
+[![GitHub Release](https://img.shields.io/github/v/release/rfonod/stabilo-benchmark?include_prereleases)](https://github.com/rfonod/stabilo-benchmark/releases) [![PyPI - Version](https://img.shields.io/pypi/v/stabilo-benchmark)](https://pypi.org/project/stabilo-benchmark/) [![PyPI - Total Downloads](https://img.shields.io/pepy/dt/stabilo-benchmark?label=total%20downloads)](https://pepy.tech/project/stabilo-benchmark) [![CI](https://github.com/rfonod/stabilo-benchmark/actions/workflows/ci.yml/badge.svg)](https://github.com/rfonod/stabilo-benchmark/actions/workflows/ci.yml) [![Python](https://img.shields.io/badge/python-3.11--3.13-blue)](https://www.python.org/) [![License](https://img.shields.io/github/license/rfonod/stabilo-benchmark)](https://github.com/rfonod/stabilo-benchmark/blob/main/LICENSE) [![GitHub Issues](https://img.shields.io/github/issues/rfonod/stabilo-benchmark)](https://github.com/rfonod/stabilo-benchmark/issues) [![arXiv](https://img.shields.io/badge/arXiv-2611.17190-b31b1b.svg)](https://arxiv.org/abs/2611.17190) [![Code](https://img.shields.io/badge/Zenodo-Code%2010.5281%2Fzenodo.24168255-blue)](https://doi.org/10.5281/zenodo.24168255) [![Data](https://img.shields.io/badge/Zenodo-Data%2010.5281%2Fzenodo.23623540-blue)](https://doi.org/10.5281/zenodo.23623540)
 
 **Stabilo Benchmark** evaluates the complete registration pipeline of reference-based UAV video
 stabilization (feature detector, descriptor, matcher, robust estimator and object masking) on
-static and dynamic urban scenes. It is the benchmark of the paper **"Consensus Capture in
-Reference-Based UAV Video Stabilization: A Benchmark on Dynamic Urban Scenes"**: the protocols, the
+static and dynamic urban scenes. It is the benchmark of the paper **["Consensus Capture in
+Reference-Based UAV Video Stabilization: A Benchmark on Dynamic Urban Scenes"](https://arxiv.org/abs/2611.17190)**: the protocols, the
 metrics and the commands that regenerate every benchmark table and figure from the paper's
 [data record](#the-songdo-experiment). Pipelines are run through [Stabilo](https://github.com/rfonod/stabilo) 🌀,
 and objects are annotated with [HBB2OBB](https://github.com/rfonod/hbb2obb) 📦.
@@ -659,8 +659,9 @@ If you use **Stabilo Benchmark** or its data, please cite the paper:
 @article{fonod2026benchmark,
   title   = {Consensus Capture in Reference-Based UAV Video Stabilization: A Benchmark on Dynamic Urban Scenes},
   author  = {Fonod, Robert and Geroliminis, Nikolas},
-  journal = {arXiv preprint},
-  year    = {2026}
+  journal = {arXiv preprint arXiv:2611.17190},
+  year    = {2026},
+  doi     = {10.48550/arXiv.2611.17190}
 }
 ```
 

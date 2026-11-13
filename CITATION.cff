@@ -10,6 +10,7 @@ authors:
     orcid: 'https://orcid.org/0000-0002-9434-3156'
 repository-code: 'https://github.com/rfonod/stabilo-benchmark'
 url: 'https://github.com/rfonod/stabilo-benchmark'
+doi: 10.5281/zenodo.24168255
 license: MIT
 version: 1.0.0
 date-released: '2026-11-12'
@@ -22,4 +23,6 @@ preferred-citation:
     - family-names: Geroliminis
       given-names: Nikolas
   year: 2026
-  journal: "arXiv preprint"
+  journal: "arXiv preprint arXiv:2611.17190"
+  doi: 10.48550/arXiv.2611.17190
+  url: 'https://arxiv.org/abs/2611.17190'
