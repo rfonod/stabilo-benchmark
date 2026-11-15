@@ -7,8 +7,8 @@ stabilization (feature detector, descriptor, matcher, robust estimator and objec
 static and dynamic urban scenes. It is the benchmark of the paper **["Consensus Capture in
 Reference-Based UAV Video Stabilization: A Benchmark on Dynamic Urban Scenes"](https://arxiv.org/abs/2611.17190)**: the protocols, the
 metrics and the commands that regenerate every benchmark table and figure from the paper's
-[data record](#the-songdo-experiment). Pipelines are run through [Stabilo](https://github.com/rfonod/stabilo) 🌀,
-and objects are annotated with [HBB2OBB](https://github.com/rfonod/hbb2obb) 📦.
+[data record](#the-songdo-experiment). Pipelines are run through [Stabilo](https://github.com/rfonod/stabilo) ⚖️,
+and objects are annotated with [HBB2OBB](https://github.com/rfonod/hbb2obb) 🔄.
 
 ![Both protocols at work: feature matches between a reference frame and a warped or later frame, with the vehicles masked](https://raw.githubusercontent.com/rfonod/stabilo-benchmark/main/assets/benchmark_visualization.webp)
 
@@ -237,15 +237,15 @@ try the annotation tools on it.
 <details>
 <summary><b>🔗 Related Projects</b></summary>
 
-- **[Stabilo](https://github.com/rfonod/stabilo) 🌀**: video and trajectory stabilization against a
+- **[Stabilo](https://github.com/rfonod/stabilo) ⚖️**: video and trajectory stabilization against a
   reference frame, with user-defined masks. The registration engine every benchmarked pipeline runs
   through.
-- **[HBB2OBB](https://github.com/rfonod/hbb2obb) 📦**: detects horizontal boxes and converts them to
+- **[HBB2OBB](https://github.com/rfonod/hbb2obb) 🔄**: detects horizontal boxes and converts them to
   oriented boxes with SAM-family models. Writes the annotations behind the masking axis.
 - **[Geo-trax](https://github.com/rfonod/geo-trax) 🚀**: georeferenced vehicle trajectory extraction
   from drone video, whose stabilization stage motivates this benchmark. Supplies the default
   detector.
-- **[Stabilo-Optimize](https://github.com/rfonod/stabilo-optimize) 🎯**: the ground-truth-free static
+- **[Stabilo-Optimize](https://github.com/rfonod/stabilo-optimize) 🎛️**: the ground-truth-free static
   campaign of the background paper, which Part I extends.
 
 </details>
